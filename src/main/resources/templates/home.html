@@ -1,10 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
 </head>
 <body>
-$END$
+<form action="/account/insert" method="post">
+    <table>
+        <tr>
+            <td>일자</td>
+            <td><input type="date" id="targetDate" name="targetDate"></td>
+        </tr>
+        <tr>
+            <td>금액</td>
+            <td><input type="text" id="targetMoney" name="targetMoney"></td>
+            <td><button>엑셀다운로드</button></td>
+        </tr>
+        <tr>
+            <td>입/출금처</td>
+            <td><input type="text" id="targetAccount" name="targetAccount"></td>
+        </tr>
+        <tr>
+            <td>적요</td>
+            <td><input type="text" id="targetText" name="targetText"></td>
+        </tr>
+        <tr>
+            <button type="submit">등록</button>
+        </tr>
+    </table>
+</form>
+<table>
+    <tr>
+        <td>월별조회</td>
+        <td><input type="date" id="targetMonth"></td>
+        <td><button onclick="monthSearch()">조회</button></td>
+    </tr>
+</table>
+<table id="MonthSearch">
+</table>
 </body>
+<script>
+    function monthSearch(){
+        var targetMonth = document.getElementById("targetMonth").value.replaceAll("-","");
+        var searchResult = "";
+        searchResult += "<th>입/출고처</th><th>적요</th><th>등록일자</th><th>금액</th>"
+        const getMonthData = new XMLHttpRequest();
+        getMonthData.open('get','/account/find?targetMonth=' + targetMonth,true);
+        getMonthData.send();
+        getMonthData.onreadystatechange = function() {
+            var step;
+            var locCd = "";
+            var note = "";
+            var regDt = "";
+            var regAmt = "";
+            var responseData = "";
+            if (getMonthData.readyState == XMLHttpRequest.DONE && getMonthData.status == 200) {
+                responseData = JSON.parse(getMonthData.responseText);
+                for(step=0; step<responseData.list.length; step++){
+                    var monthData = responseData.list[step];
+                    locCd = monthData.location;
+                    note = monthData.note;
+                    regDt = monthData.date;
+                    regAmt = monthData.amount;
+                    searchResult += "<tr><td>"+locCd+"</td><td>"+note+"</td><td>"+regDt+"</td><td>"+regAmt+"</td></tr>";
+                }
+                document.getElementById("MonthSearch").innerHTML = searchResult;
+            }
+        }
+    }
+</script>
 </html>

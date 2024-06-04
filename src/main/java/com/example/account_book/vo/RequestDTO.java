@@ -11,4 +11,5 @@ public class RequestDTO {
     private int amount; //금액
     private String location; //입출금처
     private String note; //적요
+    private String searchDate; //검색월
 }

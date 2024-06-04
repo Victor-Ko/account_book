@@ -1,9 +1,15 @@
-package com.example.account_book.respository;
+package com.example.account_book.repository;
 
 import com.example.account_book.vo.RequestDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
+@Mapper
 public interface AccountBookRepository {
     void insertBook(RequestDTO requestDTO);
 
-    void selectBook(String searchDate);
+    List<RequestDTO> selectBook(String searchDate);
 }
